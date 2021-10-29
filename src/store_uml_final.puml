@@ -1,0 +1,135 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class store.ProductInfo {
+- id: String
+- stock: int
+- product: Product
++ equals(o: Object): boolean
++ hashCode(): int
++ getId(): String
++ setId(id: String): void
++ getStock(): int
++ setStock(stock: int): void
++ getProduct(): Product
++ setProduct(product: Product): void
++ toString(): String
+}
+class store.StoreView {
+- storeMan: StoreManager
+- currentId: int
+- frame: JFrame
+- contentPane: JPanel
+- idLabel: JLabel
+- stockLabel: HashMap<String,JLabel>
+- stockCartLabel: HashMap<String,JLabel>
+- cartCostLabelStore: JLabel
+- cartCostLabelCart: JLabel
+- card: CardLayout
+- {static} STORENAME: String
+- {static} CHECKOUT: String
+- {static} HOME: String
+- {static} SHOPCART: String
+- {static} PRIMARY: Color
+- {static} BACKGROUND: Color
+- {static} BACKGROUND2: Color
+- {static} WHITE: Color
+- {static} TITLEFONT: Font
+- {static} HEADERFONT: Font
+- {static} NORMFONT: Font
+- logo: ImageIcon
++ StoreView():
++ displayGUI(): void
+- createMainMenu(): void
+- resetStore(): void
+- createStore(itemPer: int, isShopCart: boolean): JPanel[]
+- createCheckout(): void
+- createMiniPanel(type: int): JPanel
+- createLabel(text: String): JLabel
+- createButton(text: String, type: int): JButton
++ {static} main(args: String[]): void
+}
+class store.Product {
+- name: String
+- id: String
+- price: double
++ Product():
++ Product(name: String, id: String, price: double):
++ equals(o: Object): boolean
++ hashCode(): int
++ getName(): String
++ getId(): String
++ getPrice(): double
++ toString(): String
+}
+interface store.ProductStockContainer {
+~ getProductQuantity(pr: Product): int
+~ addProductQuantity(pr: Product, numToAdd: int): void
+~ removeProductQuantity(pr: Product, numBought int): boolean
+~ getNumOfProducts(): int
+}
+class store.ShoppingCart {
+- id: int
+- inv: ArrayList<ProductInfo>
++ ShoppingCart(id: int):
++ getNumOfProducts(): int
++ getInv(): ArrayList<ProductInfo>
++ getInfo(pr: Product): ProductInfo
++ getProductQuantity(pr: Product): int
++ productInList(id: String): boolean
++ getItem(id: String): ProductInfo
+- getItemIndex(id: String): int
++ addProduct(pr: Product, stock: int): boolean
++ addProductQuantity(toAdd: ProductInfo): boolean
++ addProductQuantity(pr: Product, numToAdd: int): void
++ removeProduct(list: ProductInfo): boolean
++ removeProductQuantity(pr: Product, numBought: int): boolean
++ getId(): int
++ toString(): String
+}
+class store.Inventory {
+- inv: ArrayList<ProductInfo>
++ Inventory():
++ getNumOfProducts(): int
++ getInv(): ArrayList<ProductInfo>
++ getInfo(pr: Product): ProductInfo
++ getProductQuantity(pr: Product): int
++ productInList(id: String): boolean
++ getItem(id: String): ProductInfo
+- getItemIndex(id: String): int
++ addProduct(pr: Product, stock: int): boolean
++ addProductQuantity(toAdd: ProductInfo): boolean
++ addProductQuantity(pr: Product, numToAdd: int): void
++ removeProductQuantity(pr: Product, numBought: int): boolean
++ toString(): String
+}
+class store.StoreManager {
+- {static} inventory: Inventory
+- {static} totalShopId: int
+- shoppingCart: ShoppingCart
++ StoreManager():
++ getStock(id: String): int
++ getCartStock(id: String): int
++ getProdIdInv(id: String): String
++ getProdFromName(id: String): Product
++ getCartId(): int
++ currentInvInfo(): String[][]
++ currentCartInfo(): String[][]
++ addToCart(id: String, numToAdd: int): int
++ removeFromCart(String, numBought: int): int
++ emptyCart(): void
++ getCartCost(): double
++ resetInventory():  void
++ toString(): String
+}
+
+
+store.ProductStockContainer <|.. store.ShoppingCart
+store.ProductStockContainer <|.. store.Inventory
+store.ShoppingCart o-- "0..n" store.ProductInfo
+store.Inventory o-- "0..n" store.ProductInfo
+store.ProductInfo o-- "1" store.Product
+store.StoreView o-- "1" store.StoreManager
+store.StoreManager o-- "1" store.Inventory
+store.StoreManager o-- "1" store.ShoppingCart
+@enduml
